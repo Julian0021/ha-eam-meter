@@ -1,0 +1,23 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "EAM Meter Setup",
+        "description": "Enter your EAM portal credentials",
+        "data": {
+          "username": "Username",
+          "password": "Password",
+          "entity_id": "Meter Reading Entity"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Failed to connect to EAM portal",
+      "invalid_auth": "Invalid username or password",
+      "unknown": "Unexpected error occurred"
+    },
+    "abort": {
+      "already_configured": "This account is already configured"
+    }
+  }
+}
