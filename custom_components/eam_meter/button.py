@@ -87,7 +87,7 @@ class EAMMeterSubmitButton(ButtonEntity):
             success = await self.hass.async_add_executor_job(post_readout, session_key, selected_read, readout_value, MAIN_URL)
             
             if success:
-                _LOGGER.info("Successfully posted readout: %s kWh", readout_value)
+                _LOGGER.debug("Successfully posted readout: %s kWh", readout_value)
             else:
                 raise HomeAssistantError("Failed to post readout")
                 
