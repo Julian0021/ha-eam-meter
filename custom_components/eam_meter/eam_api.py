@@ -113,3 +113,35 @@ def post_readout(session_key: str, selected_read: str, readout_kwh: int, main_ur
     response.raise_for_status()
 
     return response.status_code == 200
+
+def get_last_readout(session_key: str, main_url: str) -> int:
+    """
+    Get the last submitted readout from the EAM portal.
+    
+    Args:
+        session_key: The session key from login
+        main_url: The main URL
+
+    Returns:
+        The last submitted readout value
+
+    Raises:
+        ValueError: If last readout value is not found
+        requests.RequestException: If the HTTP request fails
+    """
+    params = {
+        'oninputprocessing': (None, 'menu$METERHISTORY'),
+        'p': (None, 'EAM'),
+        'sessionkey': (None, session_key)
+    }
+
+    response = requests.post(main_url, params=params)
+    response.raise_for_status()
+    last_readout_pattern = r'<td class="st-col-other-0 "> *([^<]+) kWh <\/td>'
+    match = re.search(last_readout_pattern, response.text, re.IGNORECASE)
+
+    if not match:
+        raise ValueError("Last readout value not found")
+    
+    last_readout_str = match.group(1).strip().replace(' kWh', '')
+    return int(last_readout_str)
