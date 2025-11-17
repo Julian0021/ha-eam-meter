@@ -1,0 +1,58 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "EAM Zähler Einrichtung",
+        "description": "Geben Sie Ihre EAM Portal Zugangsdaten ein",
+        "data": {
+          "username": "Benutzername",
+          "password": "Passwort",
+          "entity_id": "Zählerstand Entität"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Verbindung zum EAM Portal fehlgeschlagen",
+      "invalid_auth": "Ungültiger Benutzername oder Passwort",
+      "unknown": "Ein unerwarteter Fehler ist aufgetreten"
+    },
+    "abort": {
+      "already_configured": "Dieses Konto ist bereits konfiguriert"
+    }
+  },
+  "services": {
+    "submit_readout": {
+      "name": "Zählerstand übermitteln",
+      "description": "Übermittelt den aktuellen Zählerstand an das EAM Portal"
+    }
+  },
+  "exceptions": {
+    "no_entity_configured": {
+      "message": "Keine Entität konfiguriert"
+    },
+    "entity_not_found": {
+      "message": "Entität {entity_id} nicht gefunden"
+    },
+    "invalid_readout_value": {
+      "message": "Ungültiger Zählerstand: {value}"
+    },
+    "readout_must_be_positive": {
+      "message": "Zählerstand muss größer als 0 sein"
+    },
+    "coordinator_not_found": {
+      "message": "Datenkoordinator nicht gefunden"
+    },
+    "readout_too_low": {
+      "message": "Zählerstand ({new_value} kWh) muss größer sein als der letzte übermittelte Zählerstand ({last_value} kWh)"
+    },
+    "already_submitted_this_month": {
+      "message": "Für diesen Monat wurde bereits am {date} ein Zählerstand übermittelt"
+    },
+    "post_failed": {
+      "message": "Übermittlung des Zählerstands fehlgeschlagen"
+    },
+    "submit_failed": {
+      "message": "Übermittlung fehlgeschlagen: {error}"
+    }
+  }
+}

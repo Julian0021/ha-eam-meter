@@ -25,5 +25,34 @@
       "name": "Submit readout",
       "description": "Submit the current meter reading to the EAM portal"
     }
+  },
+  "exceptions": {
+    "no_entity_configured": {
+      "message": "No entity_id configured"
+    },
+    "entity_not_found": {
+      "message": "Entity {entity_id} not found"
+    },
+    "invalid_readout_value": {
+      "message": "Invalid readout value: {value}"
+    },
+    "readout_must_be_positive": {
+      "message": "Readout value must be greater than 0"
+    },
+    "coordinator_not_found": {
+      "message": "Data coordinator not found"
+    },
+    "readout_too_low": {
+      "message": "Readout value ({new_value} kWh) must be greater than the last submitted readout ({last_value} kWh)"
+    },
+    "already_submitted_this_month": {
+      "message": "A reading was already submitted this month on {date}"
+    },
+    "post_failed": {
+      "message": "Failed to post readout"
+    },
+    "submit_failed": {
+      "message": "Failed to submit readout: {error}"
+    }
   }
 }
