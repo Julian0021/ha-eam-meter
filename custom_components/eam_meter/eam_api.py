@@ -137,11 +137,11 @@ def get_last_readout(session_key: str, main_url: str) -> tuple[int, str]:
 
     response = requests.post(main_url, params=params)
     response.raise_for_status()
-    last_readout_pattern = r'<td class="st-col-other-0 "> *([^<]+) kWh <\/td>'
-    kWh_match = re.search(last_readout_pattern, response.text, re.IGNORECASE)
+    last_readout_pattern = r'<td class="st-col-other-0 "> (\d+) kWh <\/td>'
+    kWh_match = re.search(last_readout_pattern, response.text)
     
     date_pattern = r'<td class="st-col-other-0 "> (\d{2}\.\d{2}\.\d{4}) </td>'
-    date_match = re.search(date_pattern, response.text, re.IGNORECASE)
+    date_match = re.search(date_pattern, response.text)
 
     if not kWh_match:
         raise ValueError("Last readout value not found")
@@ -150,12 +150,11 @@ def get_last_readout(session_key: str, main_url: str) -> tuple[int, str]:
         raise ValueError("Last readout date not found")
     
     # Parse value as integer
-    last_readout_str = kWh_match.group(1).strip().replace(' kWh', '')
-    value = int(last_readout_str)
-    
+    kWh_value = int(kWh_match.group(1))
+
     # Get date string in DD.MM.YYYY format
-    date_str = date_match.group(1).strip()
-    
-    return (value, date_str)
+    date_str = date_match.group(1)
+
+    return (kWh_value, date_str)
 
     
