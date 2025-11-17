@@ -37,30 +37,52 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         entity_id = entry.data.get(CONF_ENTITY_ID)
 
         if not entity_id:
-            raise HomeAssistantError("No entity_id configured")
+            raise HomeAssistantError(
+                translation_domain=DOMAIN,
+                translation_key="no_entity_configured"
+            )
 
         state = hass.states.get(entity_id)
 
         if not state:
-            raise HomeAssistantError(f"Entity {entity_id} not found")
+            raise HomeAssistantError(
+                translation_domain=DOMAIN,
+                translation_key="entity_not_found",
+                translation_placeholders={"entity_id": entity_id}
+            )
 
         try:
             readout_value = round(float(state.state))
         except (ValueError, TypeError) as err:
-            raise HomeAssistantError(f"Invalid readout value: {state.state}") from err
+            raise HomeAssistantError(
+                translation_domain=DOMAIN,
+                translation_key="invalid_readout_value",
+                translation_placeholders={"value": str(state.state)}
+            ) from err
 
         if readout_value <= 0:
-            raise HomeAssistantError("Readout value must be greater than 0")
+            raise HomeAssistantError(
+                translation_domain=DOMAIN,
+                translation_key="readout_must_be_positive"
+            )
 
         # Check if readout value is greater than last readout
         coordinator = hass.data[DOMAIN][entry.entry_id].get("coordinator")
         if not coordinator:
-            raise HomeAssistantError("Data coordinator not found")
+            raise HomeAssistantError(
+                translation_domain=DOMAIN,
+                translation_key="coordinator_not_found"
+            )
         
         last_readout = coordinator.data.get("value")
         if last_readout and readout_value <= last_readout:
             raise HomeAssistantError(
-                f"Readout value ({readout_value} kWh) must be greater than the last submitted readout ({last_readout} kWh)"
+                translation_domain=DOMAIN,
+                translation_key="readout_too_low",
+                translation_placeholders={
+                    "new_value": str(readout_value),
+                    "last_value": str(last_readout)
+                }
             )
         
         # Check if there was already a submission in the current month
@@ -72,7 +94,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                 
                 if last_date.year == current_date.year and last_date.month == current_date.month:
                     raise HomeAssistantError(
-                        f"A reading was already submitted this month on {last_date_str}"
+                        translation_domain=DOMAIN,
+                        translation_key="already_submitted_this_month",
+                        translation_placeholders={"date": last_date_str}
                     )
             except ValueError:
                 _LOGGER.warning("Could not parse last submission date: %s", last_date_str)
@@ -109,11 +133,20 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                     _LOGGER.debug("Refreshing last readout sensor")
                     await coordinator.async_request_refresh()
             else:
-                raise HomeAssistantError("Failed to post readout")
+                raise HomeAssistantError(
+                    translation_domain=DOMAIN,
+                    translation_key="post_failed"
+                )
 
+        except HomeAssistantError:
+            raise
         except Exception as err:
             _LOGGER.error("Error posting readout: %s", err)
-            raise HomeAssistantError(f"Failed to submit readout: {err}") from err
+            raise HomeAssistantError(
+                translation_domain=DOMAIN,
+                translation_key="submit_failed",
+                translation_placeholders={"error": str(err)}
+            ) from err
 
     # Register the service
     hass.services.async_register(
