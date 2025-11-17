@@ -1,7 +1,7 @@
 # EAM Meter Readout Integration for Home Assistant
 
 [![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/custom-components/hacs)
-![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
+![Version](https://img.shields.io/badge/version-1.0.1-blue.svg)
 
 Submit meter readings to the EAM customer portal (eam.mein-portal.de) from Home Assistant.
 
