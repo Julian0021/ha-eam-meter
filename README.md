@@ -7,10 +7,11 @@ Submit meter readings to the EAM customer portal (eam.mein-portal.de) from Home 
 
 ## Features
 
-- 📤 Button to submit readings from any numeric entity
-- 📊 Sensor showing last submitted readout from portal
+- 📤 Service to submit readings from any energy entity
+- 📊 Sensor showing last submitted readout and date from portal
+- ✅ Validates new reading is greater than last reading
+- 🔒 Prevents duplicate submissions in the same month
 - 🔐 Secure authentication with EAM portal
-- 🔄 Auto-refresh sensor after submission
 
 ## Installation
 
@@ -32,14 +33,12 @@ Submit meter readings to the EAM customer portal (eam.mein-portal.de) from Home 
 3. Enter your EAM portal username and password
 4. Select the entity containing your meter reading
 
-## Entities
+## Usage
 
-- `button.eam_meter_submit_readout` - Submit current reading to portal
-- `sensor.eam_meter_last_readout` - Last submitted reading (updates every 6 hours and after button press)
+**Service**: `eam_meter.submit_readout`  
+**Sensor**: `sensor.eam_meter_last_readout` (updates every 6 hours and after submission)
 
-## Example Automation
-
-Submit monthly on the 1st at 9 AM:
+### Example Automation
 
 ```yaml
 automation:
@@ -51,16 +50,14 @@ automation:
       - condition: template
         value_template: "{{ now().day == 1 }}"
     action:
-      - service: button.press
-        target:
-          entity_id: button.eam_meter_submit_readout
+      - service: eam_meter.submit_readout
 ```
 
 ## Troubleshooting
 
 **Cannot Connect**: Check internet connection and EAM portal availability  
 **Invalid Auth**: Verify username and password  
-**Invalid Readout Value**: Ensure selected entity has a valid numeric state
+**Already submitted this month**: Only one submission per month is allowed
 
 Enable debug logging:
 ```yaml
