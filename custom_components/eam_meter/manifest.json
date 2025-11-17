@@ -2,7 +2,7 @@
   "domain": "eam_meter",
   "name": "EAM Meter Readout",
   "version": "1.0.0",
-  "documentation": "https://github.com/Julian0021/pyeam",
+  "documentation": "https://github.com/Julian0021/ha-eam-meter",
   "requirements": ["requests"],
   "codeowners": ["@Julian0021"],
   "config_flow": true,

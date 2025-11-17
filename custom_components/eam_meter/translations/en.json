@@ -19,5 +19,11 @@
     "abort": {
       "already_configured": "This account is already configured"
     }
+  },
+  "services": {
+    "submit_readout": {
+      "name": "Submit readout",
+      "description": "Submit the current meter reading to the EAM portal"
+    }
   }
 }

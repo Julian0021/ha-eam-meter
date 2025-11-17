@@ -22,7 +22,7 @@ STEP_USER_DATA_SCHEMA = vol.Schema(
         vol.Required(CONF_USERNAME): str,
         vol.Required(CONF_PASSWORD): str,
         vol.Required("entity_id"): selector.EntitySelector(
-            selector.EntitySelectorConfig(domain=["sensor", "input_number", "number"])
+            selector.EntitySelectorConfig(domain=["sensor", "input_number", "number"], device_class="energy")
         ),
     }
 )

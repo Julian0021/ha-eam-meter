@@ -114,7 +114,7 @@ def post_readout(session_key: str, selected_read: str, readout_kwh: int, main_ur
 
     return response.status_code == 200
 
-def get_last_readout(session_key: str, main_url: str) -> int:
+def get_last_readout(session_key: str, main_url: str) -> tuple[int, str]:
     """
     Get the last submitted readout from the EAM portal.
     
@@ -123,10 +123,10 @@ def get_last_readout(session_key: str, main_url: str) -> int:
         main_url: The main URL
 
     Returns:
-        The last submitted readout value
+        Tuple of (value: int, date: str) where date is in DD.MM.YYYY format
 
     Raises:
-        ValueError: If last readout value is not found
+        ValueError: If last readout value or date is not found
         requests.RequestException: If the HTTP request fails
     """
     params = {
@@ -138,10 +138,24 @@ def get_last_readout(session_key: str, main_url: str) -> int:
     response = requests.post(main_url, params=params)
     response.raise_for_status()
     last_readout_pattern = r'<td class="st-col-other-0 "> *([^<]+) kWh <\/td>'
-    match = re.search(last_readout_pattern, response.text, re.IGNORECASE)
+    kWh_match = re.search(last_readout_pattern, response.text, re.IGNORECASE)
+    
+    date_pattern = r'<td class="st-col-other-0 "> (\d{2}\.\d{2}\.\d{4}) </td>'
+    date_match = re.search(date_pattern, response.text, re.IGNORECASE)
 
-    if not match:
+    if not kWh_match:
         raise ValueError("Last readout value not found")
     
-    last_readout_str = match.group(1).strip().replace(' kWh', '')
-    return int(last_readout_str)
+    if not date_match:
+        raise ValueError("Last readout date not found")
+    
+    # Parse value as integer
+    last_readout_str = kWh_match.group(1).strip().replace(' kWh', '')
+    value = int(last_readout_str)
+    
+    # Get date string in DD.MM.YYYY format
+    date_str = date_match.group(1).strip()
+    
+    return (value, date_str)
+
+    

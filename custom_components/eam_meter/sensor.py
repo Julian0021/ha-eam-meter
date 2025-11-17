@@ -38,10 +38,13 @@ async def async_setup_entry(
             session_key = await hass.async_add_executor_job(
                 get_session_key, MAIN_URL, username, password
             )
-            last_readout = await hass.async_add_executor_job(
+            value, date_str = await hass.async_add_executor_job(
                 get_last_readout, session_key, MAIN_URL
             )
-            return last_readout
+            return {
+                "value": value,
+                "date": date_str
+            }
         except Exception as err:
             raise UpdateFailed(f"Error communicating with EAM portal: {err}") from err
 
@@ -89,4 +92,15 @@ class EAMLastReadoutSensor(CoordinatorEntity, SensorEntity):
     @property
     def native_value(self) -> int | None:
         """Return the last submitted readout value."""
-        return self.coordinator.data
+        if self.coordinator.data is None:
+            return None
+        return self.coordinator.data.get("value")
+    
+    @property
+    def extra_state_attributes(self) -> dict[str, str] | None:
+        """Return additional attributes."""
+        if self.coordinator.data is None:
+            return None
+        return {
+            "date": self.coordinator.data.get("date")
+        }

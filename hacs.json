@@ -1,0 +1,5 @@
+{
+  "name": "EAM Meter Readout",
+  "render_readme": true,
+  "domains": ["sensor"]
+}
